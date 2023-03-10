@@ -109,6 +109,7 @@ CREATE TABLE users1(
     height numeric(3,2)
 )
 ALTER TABLE users1 ADD CONSTRAINT users1_birthday_check CHECK(birthday < current_date);
+DELETE FROM users1 WHERE id BETWEEN 616 AND 1215;
 CREATE TABLE orders1(
     id serial PRIMARY KEY,
     created_at timestamp DEFAULT current_timestamp,

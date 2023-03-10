@@ -1,6 +1,8 @@
+
+
 module.exports.mapUsers = (results) => {
-    console.log(results);
-    const res = results.map(({gender, name:{first,last}, email, dob:{date}}) => `('${first}', '${last}', '${email}', '${gender}', '${date}', true)`)
+    const res = results.map(({gender, name:{first,last}, email, dob:{date}}) => 
+    `('${first}', '${last}', '${email}', '${gender}', '${date}', ${Boolean(Math.random() > 0.5)})`);
     return res
 }
 /*
