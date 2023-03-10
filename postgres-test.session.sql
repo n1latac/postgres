@@ -46,3 +46,118 @@ ALTER TABLE books ADD CONSTRAINT books_quantity_check CHECK (quantity >= 0);
 
 ALTER TABLE books
 ADD CONSTRAINT "author_name_unique" CHECK (author != '' AND book_name != '') UNIQUE(author, book_name);
+
+ALTER TABLE users ADD COLUMN id serial PRIMARY KEY;
+
+
+
+ALTER TABLE users ADD COLUMN chat_id int REFERENCES chats(id);
+CREATE TABLE chats(
+    id serial PRIMARY KEY,
+    owner int,
+    description varchar(512),
+    name varchar(100) NOT NULL UNIQUE
+);
+CREATE TABLE users_to_chats(
+    users_id int REFERENCES users(id),
+    chats_id int REFERENCES chats(id),
+    quantity int,
+    PRIMARY KEY(users_id, chats_id)
+);
+ALTER TABLE messages ADD COLUMN user_messages int REFERENCES users(id);
+ALTER TABLE messages ADD COLUMN chat_messages int REFERENCES chats(id);
+ALTER TABLE chats ADD COLUMN user_owner int REFERENCES users(id); 
+
+
+
+
+CREATE TABLE content(
+    id serial PRIMARY KEY,
+    content_name varchar(40) NOT NULL CHECK (content_name != ''),
+    describe varchar(256),
+    author int REFERENCES users_test(id),
+    created_at timestamp DEFAULT current_timestamp,
+);
+
+CREATE TABLE reaction(
+    is_liked boolean DEFAULT NULL,
+    user_is int REFERENCES users(id),
+    content_is int REFERENCES content(id)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE users1(
+    id serial PRIMARY KEY,
+    first_name varchar(128) NOT NULL CHECK (first_name != ''),
+    last_name varchar(128) NOT NULL CHECK (last_name != ''),
+    email varchar(256) NOT NULL CHECK (email != ''),
+    gender varchar(128) NOT NULL CHECK (gender != ''),
+    is_subscribed boolean DEFAULT false,
+    birthday date CHECK (birthday > current_date),
+    foot_size smallint,
+    height numeric(3,2)
+)
+CREATE TABLE orders1(
+    id serial PRIMARY KEY,
+    created_at timestamp DEFAULT current_timestamp,
+    customer_id int REFERENCES users1(id)
+)
+CREATE TABLE products1(
+    id serial PRIMARY KEY,
+    name varchar(256) NOT NULL CHECK(name != ''),
+    brand varchar(128) NOT NULL CHECK(brand != ''),
+    model varchar(128) NOT NULL CHECK(model != ''),
+    description varchar(512),
+    category varchar(128) NOT NULL CHECK(category != ''),
+    price numeric(8,2) NOT NULL CHECK(price > 0),
+    discount_price numeric(8,2),
+    quantity int NOT NULL CHECK (quantity >= 0)
+)
+CREATE TABLE orders1_to_products1(
+    orders1_id int REFERENCES orders1(id),
+    products1_id int REFERENCES products1(id),
+    quantity int NOT NULL CHECK(quantity > 0),
+    PRIMARY KEY(orders1_id, products1_id)
+)
+CREATE TABLE chats1(
+    id serial PRIMARY KEY,
+    name varchar(128) NOT NULL CHECK(name != ''),
+    owner_id int REFERENCES users1(id) ON DELETE CASCADE,
+    created_at timestamp DEFAULT current_timestamp
+);
+CREATE TABLE chats1_to_users1(
+    chat_id int REFERENCES chats1(id) ON DELETE CASCADE,
+    user_id int REFERENCES users1(id) ON DELETE CASCADE,
+    join_at timestamp DEFAULT current_timestamp,
+    PRIMARY KEY(chat_id, user_id)
+)
+CREATE TABLE messages1(
+    body varchar(1500) NOT NULL CHECK(body != ''),
+    is_read boolean DEFAULT false,
+    author_id int,
+    chat_id int,
+    FOREIGN KEY(author_id, chat_id) REFERENCES chats1_to_users1(user_id, chat_id) ON DELETE CASCADE
+)
+CREATE TABLE content1(
+    id serial PRIMARY KEY,
+    name varchar(128) NOT NULL CHECK(name != ''),
+    description varchar(512),
+    author_id int REFERENCES users1(id) ON DELETE CASCADE,
+    created_at timestamp DEFAULT current_timestamp
+)
+CREATE TABLE reaction1(
+    is_liked boolean DEFAULT NULL,
+    user_is int REFERENCES users1(id),
+    content_is int REFERENCES content1(id)
+);
