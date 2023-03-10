@@ -126,6 +126,7 @@ CREATE TABLE products1(
     discount_price numeric(8,2),
     quantity int NOT NULL CHECK (quantity >= 0)
 )
+ALTER TABLE products1 DROP COLUMN name;
 CREATE TABLE orders1_to_products1(
     orders1_id int REFERENCES orders1(id),
     products1_id int REFERENCES products1(id),
