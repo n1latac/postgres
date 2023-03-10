@@ -15,7 +15,7 @@ async function start(){
     const data = await loadUser();
 
     const res = await client.query(`INSERT INTO users1
-    (first_name, last_name, email, gender, is_subscribed)
+    (first_name, last_name, email, gender, birthday, is_subscribed)
     VALUES ${mapUsers(data)}`);
     await client.end();
 }

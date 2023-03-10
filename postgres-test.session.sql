@@ -104,10 +104,11 @@ CREATE TABLE users1(
     email varchar(256) NOT NULL CHECK (email != ''),
     gender varchar(128) NOT NULL CHECK (gender != ''),
     is_subscribed boolean DEFAULT false,
-    birthday date CHECK (birthday > current_date),
+    birthday date CHECK (birthday < current_date),
     foot_size smallint,
     height numeric(3,2)
 )
+ALTER TABLE users1 ADD CONSTRAINT users1_birthday_check CHECK(birthday < current_date);
 CREATE TABLE orders1(
     id serial PRIMARY KEY,
     created_at timestamp DEFAULT current_timestamp,
